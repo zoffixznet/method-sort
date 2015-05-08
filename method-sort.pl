@@ -17,7 +17,11 @@ for ( @files ) {
     my @methods = path($_)->slurp =~ /^sub\s+(\w+)\s*{/mg;
     # use Acme::Dump::And::Dumper;
     # die DnD [ @methods ];
-    my @sorted = sort @methods;
+    my @sorted = sort {
+        return 1 if $a =~ /^_/ and $b !~ /^_/;
+        return -1  if $a !~ /^_/ and $b =~ /^_/;
+        return 0;
+    } sort @methods;
     next if Compare(\@methods, \@sorted);
 
     say "$_ has unsorted methods:";

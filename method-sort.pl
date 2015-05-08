@@ -26,11 +26,18 @@ for ( @files ) {
 
     say "$_ has unsorted methods:";
 
+    my @diff;
+    for ( 0..$#methods ) {
+        $diff[$_] = $methods[$_] ne $sorted[$_] ? '#' : ' ';
+    }
+
+    unshift @diff, ' ';
     unshift @methods, "==Original===";
     unshift @sorted,  "===Sorted===" ;
     my $max = 0;
+
     length > $max and $max = length for @methods;
-    printf "%${max}s | %s\n", $methods[$_], $sorted[$_]
+    printf "%s %${max}s | %s\n", $diff[$_], $methods[$_], $sorted[$_]
         for 0..$#methods;
 
     say "\n\n";

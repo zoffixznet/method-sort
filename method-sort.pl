@@ -14,9 +14,9 @@ my $repo = shift;
 my @files = File::Find::Rule->file->name('*.pm', '*.pl')->in($repo);
 
 for ( @files ) {
-    my @methods = path($_)->slurp =~ /^sub\s+(\w+)\s*{/mg;
-    # use Acme::Dump::And::Dumper;
-    # die DnD [ @methods ];
+    my $data = path($_)->slurp =~ s/(__DATA__|__END__).+//rs;
+    my @methods = $data =~ /^sub\s+(\w+)\s*{/mg;
+
     my @sorted = sort {
         return 1 if $a =~ /^_/ and $b !~ /^_/;
         return -1  if $a !~ /^_/ and $b =~ /^_/;
